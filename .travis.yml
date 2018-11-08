@@ -18,4 +18,8 @@ script:
 
 - export PATH=$PATH:$(pwd)/$DISTRIBUTION_NAME/bin
 
+- ballerina version
+
+- ballerina init
+
 - ballerina build currency-reader
