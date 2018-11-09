@@ -28,7 +28,7 @@ service<http:Service> currency bind currencyListenerEp {
     }
     getAllCurrencies (endpoint caller, http:Request request) {
         string context = "/api/lates";
-        string accessKey = "?access_key="+ config:getAsString("access_key");
+        string accessKey = "?access_key="+ config:getAsString("FIXERIO_ACCESS_KEY");
 
         log:printInfo("URL: "+ context+accessKey);
         http:Response backendResponse;
