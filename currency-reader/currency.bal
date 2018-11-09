@@ -47,7 +47,7 @@ service<http:Service> currency bind currencyListenerEp {
                 string|() erStr = check er;
                 json errorResponseJson = {
                     "status": false,
-                    "message":err.message,
+                    "message": err.message,
                     "cause": erStr
                 };
                 log:printInfo(errorResponseJson.toString());

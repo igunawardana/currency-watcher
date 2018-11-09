@@ -1,6 +1,11 @@
 import ballerina/http;
 import ballerina/io;
 import ballerina/test;
+import ballerina/system;
+
+endpoint http:Client getAllCurrenciesEp {
+    url: "http://localhost:9090/currency/"
+};
 
 # Before Suite Function
 @test:BeforeSuite
@@ -12,7 +17,13 @@ function beforeSuiteServiceFunc () {
 @test:Config
 function testGetAllCurrenciesSuccess () {
     io:println("Testing Get All Currencies Success scenario");
-    test:assertTrue(callgetAllCurrencyService(), msg = "Failed to get 200 status code");
+    test:assertTrue(callgetAllCurrencyServiceSuccess(), msg = "Failed to get 200 status code");
+}
+
+#TODO
+@test:Config
+function testGetAllCurrenciesFailed() {
+    test:assertFalse(false, msg = "Assertion Failed!");
 }
 
 # After Suite Function
@@ -21,10 +32,7 @@ function afterSuiteServiceFunc () {
     io:println("After Suite function executing");
 }
 
-function callgetAllCurrencyService() returns boolean {
-    endpoint http:Client getAllCurrenciesEp {
-        url: "http://localhost:9090/currency/"
-    };
+function callgetAllCurrencyServiceSuccess() returns boolean {
 
     var res = getAllCurrenciesEp->get("/");
 
@@ -38,6 +46,6 @@ function callgetAllCurrencyService() returns boolean {
         error err => {
             io:println("Error found ", err);
         }
-    } 
+    }
     return false;
 }
