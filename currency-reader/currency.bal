@@ -27,25 +27,20 @@ service<http:Service> currency bind currencyListenerEp {
         path: "/"
     }
     getAllCurrencies (endpoint caller, http:Request request) {
-        string context = "/api/lates";
+        string context = "/api/latest";
         string accessKey = "?access_key="+ config:getAsString("FIXERIO_ACCESS_KEY");
 
         log:printInfo("URL: "+ context+accessKey);
-        http:Response backendResponse;
-        error backendError;
 
         var resp = fixerClientEp -> get(context+accessKey);
 
         match resp {
             http:Response response => {
                 log:printInfo("Response received from backend ");
-
-                json tempJson = check response.getJsonPayload();
                 var respondVar = caller -> respond(response);
             }
             error err => {
                 log:printError("Error from backend ", err = ());
-                io:println(err);
 
                 error? er = check err.cause;
 
@@ -56,6 +51,7 @@ service<http:Service> currency bind currencyListenerEp {
                     "cause": erStr
                 };
                 log:printInfo(errorResponseJson.toString());
+                http:Response backendResponse;
                 backendResponse.setJsonPayload(errorResponseJson, contentType = "application/json");
                 backendResponse.statusCode = 500;
                 var respondVar = caller -> respond(backendResponse);
