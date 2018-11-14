@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export FIXERIO_ACCESS_KEY=
+
+export DOCKER_IMAGE_TAG=0.0.1
+export DOCKERHUB_REGISTRY=
+export DOCKERHUB_USERNAME=
+export DOCKERHUB_PASSWORD=
+export DOCKER_BASE_IMAGE=ballerina/ballerina:0.983.0
