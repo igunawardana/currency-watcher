@@ -2,7 +2,7 @@ import ballerina/config;
 import ballerina/http;
 import ballerina/log;
 import ballerina/io;
-import ballerinax/docker;
+import ballerinax/kubernetes;
 
 endpoint http:Listener currencyListenerEp {
     port: 9090
@@ -12,27 +12,17 @@ endpoint http:Client fixerClientEp {
     url: "http://data.fixer.io"
 };
 
-@docker:Config {
-    name: "currency-watcher",
-    push: true,
-    tag: "$env{DOCKER_IMAGE_TAG}",
-    buildImage: true,
-    registry:"$env{DOCKERHUB_REGISTRY}",
-    username: "$env{DOCKERHUB_USERNAME}",
-    password: "$env{DOCKERHUB_PASSWORD}",
-    baseImage: "$env{DOCKER_BASE_IMAGE}"
+@kubernetes:Deployment {
+    image:"",
+    name:"currency-watcher",
+    buildImage: false,
+    imagePullPolicy: "Always",
+    imagePullSecrets: []
 }
 @http:ServiceConfig {
     basePath: "/currency"
 }
 service<http:Service> currency bind currencyListenerEp {
-
-    # A resource is an invokable API method
-    # Accessible at '/hello/sayHello
-    #'caller' is the client invoking this resource 
-
-    # + caller - Server Connector
-    # + request - Request
 
     @http:ResourceConfig {
         path: "/"
