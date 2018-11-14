@@ -1,3 +1,4 @@
 target/
 .ballerina
 ballerina-internal.log
+local-env-variables.sh
