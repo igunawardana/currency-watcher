@@ -17,7 +17,7 @@ endpoint http:Client fixerClientEp {
     push: true,
     tag: "$env{DOCKER_IMAGE_TAG}",
     buildImage: true,
-    registry:"$env{DOCKERHUB_REGISTRY}",
+    registry: "$env{DOCKERHUB_REGISTRY}",
     username: "$env{DOCKERHUB_USERNAME}",
     password: "$env{DOCKERHUB_PASSWORD}",
     baseImage: "$env{DOCKER_BASE_IMAGE}"
@@ -27,35 +27,28 @@ endpoint http:Client fixerClientEp {
 }
 service<http:Service> currency bind currencyListenerEp {
 
-    # A resource is an invokable API method
-    # Accessible at '/hello/sayHello
-    #'caller' is the client invoking this resource 
-
-    # + caller - Server Connector
-    # + request - Request
-
     @http:ResourceConfig {
         path: "/"
     }
-    getAllCurrencies (endpoint caller, http:Request request) {
+    getAllCurrencies(endpoint caller, http:Request request) {
         string context = "/api/latest";
-        string accessKey = "?access_key="+ config:getAsString("FIXERIO_ACCESS_KEY");
+        string accessKey = "?access_key=" + config:getAsString("FIXERIO_ACCESS_KEY");
 
-        log:printInfo("URL: "+ context+accessKey);
+        log:printInfo("URL: " + context + "{keyLength:" + accessKey.length() + "}");
 
-        var resp = fixerClientEp -> get(context+accessKey);
+        var resp = fixerClientEp->get(context + accessKey);
 
         match resp {
             http:Response response => {
                 log:printInfo("Response received from backend ");
-                var respondVar = caller -> respond(response);
+                var respondVar = caller->respond(response);
             }
             error err => {
                 log:printError("Error from backend ", err = ());
 
                 error? er = check err.cause;
 
-                string|() erStr = check er;
+                string | () erStr = check er;
                 json errorResponseJson = {
                     "status": false,
                     "message": err.message,
@@ -65,7 +58,7 @@ service<http:Service> currency bind currencyListenerEp {
                 http:Response backendResponse;
                 backendResponse.setJsonPayload(errorResponseJson, contentType = "application/json");
                 backendResponse.statusCode = 500;
-                var respondVar = caller -> respond(backendResponse);
+                var respondVar = caller->respond(backendResponse);
             }
         }
     }
