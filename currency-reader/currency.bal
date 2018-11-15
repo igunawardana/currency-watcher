@@ -2,7 +2,7 @@ import ballerina/config;
 import ballerina/http;
 import ballerina/log;
 import ballerina/io;
-import ballerinax/docker;
+import ballerinax/kubernetes;
 
 endpoint http:Listener currencyListenerEp {
     port: 9090
@@ -12,16 +12,13 @@ endpoint http:Client fixerClientEp {
     url: "http://data.fixer.io"
 };
 
-@docker:Config {
+@kubernetes:Deployment {
+    image: "igunawardana/currency-watcher",
     name: "currency-watcher",
-    push: true,
-    tag: "$env{DOCKER_IMAGE_TAG}",
-    buildImage: true,
-    registry: "$env{DOCKERHUB_REGISTRY}",
-    username: "$env{DOCKERHUB_USERNAME}",
-    password: "$env{DOCKERHUB_PASSWORD}",
-    baseImage: "$env{DOCKER_BASE_IMAGE}"
+    buildImage: false,
+    imagePullPolicy: "Always"
 }
+
 @http:ServiceConfig {
     basePath: "/currency"
 }
