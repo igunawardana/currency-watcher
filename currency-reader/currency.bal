@@ -16,7 +16,8 @@ endpoint http:Client fixerClientEp {
     image: "igunawardana/currency-watcher",
     name: "currency-watcher",
     buildImage: false,
-    imagePullPolicy: "Always"
+    imagePullPolicy: "Always",
+    baseImage: "ballerina/ballerina:0.983.0"
 }
 
 @http:ServiceConfig {
